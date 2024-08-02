@@ -20,3 +20,8 @@ resources:
         mem_mb: 24000
         runtime: 120
         partition: short
+    intersect:
+        threads: 8
+        mem_mb: 24000
+        runtime: 120
+        partition: short

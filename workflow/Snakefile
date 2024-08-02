@@ -58,3 +58,25 @@ rule chr_meter:
         print b[1], b[2], b[3]; exit}}}}' \
         {input.stage_bed} > {output.chr_bed}
     """
+
+rule intersect:
+    input: 
+        chr_bed = f"results/{{stage}}/{{chr}}_{{stage}}.bed",
+        stage_bam = f"{INPUT_DIR}/{{stage}}_LASeR/sim.srt.bam" 
+    output:
+        chr_bam = f"results/{{stage}}/{{chr}}_{{stage}}.bam"
+    log:
+        f"results/log/intersect/{{chr}}_{{stage}}.log"
+    benchmark:
+        f"results/log/intersect/{{chr}}_{{stage}}.bmk"
+    threads: get_resource("intersect", "threads")
+    resources:
+        mem_mb = get_resource("intersect", "mem_mb"),
+        runtime = get_resource("intersect", "runtime"),
+        slurm_partition = get_resource("intersect", "partition")
+    conda:
+        "envs/bedtools.yaml"
+    shell:"""
+        bedtools intersect -abam {input.stage_bam} -b {input.chr_bed} \
+        -wa > {output.chr_bam}"
+    """
