@@ -36,7 +36,7 @@ rule bamtobed:
     conda:
         "envs/bedtools.yaml"
     shell:"""
-    bedtools bamtobed -i {input.stage_bam} > {output.stage_bed}
+        bedtools bamtobed -i {input.stage_bam} > {output.stage_bed}
     """
 
 rule chr_meter:
@@ -53,14 +53,16 @@ rule chr_meter:
         mem_mb = get_resource("chr_meter", "mem_mb"),
         runtime = get_resource("chr_meter", "runtime"),
         slurm_partition = get_resource("chr_meter", "partition")
-    shell:"""
-        awk -v chr="{{chr}}" \
-        'BEGIN {{FS=OFS="\\t"}} \
-        {{if ($4 ~ "\\|" chr "_") \
-        {{split($4, a, "\\|"); \
-        split(a[2], b, "_"); \
-        print b[1], b[2], b[3]; exit}}}}' \
-        {input.stage_bed} > {output.chr_bed}
+    shell: """
+    awk -v chr={wildcards.chr} 'BEGIN{{OFS="\\t"}} {{
+        split($4, arr, "|")
+        split(arr[2], coords, ",")
+        split(coords[1], chr_info, "_")
+        if (chr_info[1] == chr) {{
+            print chr_info[1], chr_info[2], chr_info[3]
+            exit
+        }}
+    }}' {input.stage_bed} > {output.chr_bed}
     """
 
 rule intersect:
