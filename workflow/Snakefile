@@ -15,6 +15,10 @@ def get_resource(rule, resource):
         return config["resources"]["default"][resource]
 
 
+rule all:
+    input:
+        [f"results/{stage}/{chr}_{stage}.bam.bai" for stage in STAGE_LIST for chr in CHR_LIST]
+
 rule bamtobed: 
     input:
         stage_bam = f"{INPUT_DIR}/{{stage}}_LASeR/sim.srt.bam" 
