@@ -84,7 +84,7 @@ rule intersect:
         "envs/bedtools.yaml"
     shell:"""
         bedtools intersect -abam {input.stage_bam} -b {input.chr_bed} \
-        -wa > {output.chr_bam}"
+        -wa > {output.chr_bam}
     """
 
 rule index:
