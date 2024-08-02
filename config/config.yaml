@@ -2,6 +2,8 @@ input_dir: "../visor-simulations/results"
 
 stage_list: ["v1_30x_A", "v1_30x_B", "v1_30x_C"]
 
+chr_list: ["chr1", "chr6", "chr9", "chr12", "chr14", "chr17"]
+
 resources:
     default:
         threads: 4
@@ -11,5 +13,10 @@ resources:
     bamtobed:
         threads: 8
         mem_mb: 64000
+        runtime: 120
+        partition: short
+    chr_meter:
+        threads: 8
+        mem_mb: 24000
         runtime: 120
         partition: short

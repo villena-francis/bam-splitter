@@ -5,6 +5,8 @@ INPUT_DIR = config['input_dir']
 
 STAGE_LIST = config['stage_list']
 
+CHR_LIST = config['chr_list']
+
 
 def get_resource(rule, resource):
     try:
@@ -31,4 +33,28 @@ rule bamtobed:
         "envs/bedtools.yaml"
     shell:"""
     bedtools bamtobed -i {input.stage_bam} > {output.stage_bed}
+    """
+
+rule chr_meter:
+    input:
+        stage_bed = f"resources/{{stage}}.bed"
+    output:
+        chr_bed = f"results/{{stage}}/{{chr}}_{{stage}}.bed"
+    log:
+        f"results/log/chr_meter/{{chr}}_{{stage}}.log"
+    benchmark:
+        f"results/log/chr_meter/{{chr}}_{{stage}}.bmk"
+    threads: get_resource("chr_meter", "threads")
+    resources:
+        mem_mb = get_resource("chr_meter", "mem_mb"),
+        runtime = get_resource("chr_meter", "runtime"),
+        slurm_partition = get_resource("chr_meter", "partition")
+    shell:"""
+        awk -v chr="{{chr}}" \
+        'BEGIN {{FS=OFS="\\t"}} \
+        {{if ($4 ~ "\\|" chr "_") \
+        {{split($4, a, "\\|"); \
+        split(a[2], b, "_"); \
+        print b[1], b[2], b[3]; exit}}}}' \
+        {input.stage_bed} > {output.chr_bed}
     """
