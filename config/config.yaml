@@ -1,0 +1,15 @@
+input_dir: "../visor-simulations/results"
+
+stage_list: ["v1_30x_A", "v1_30x_B", "v1_30x_C"]
+
+resources:
+    default:
+        threads: 4
+        mem_mb: 4000
+        runtime: 120
+        partition: short
+    bamtobed:
+        threads: 8
+        mem_mb: 64000
+        runtime: 120
+        partition: short

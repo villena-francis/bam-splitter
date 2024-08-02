@@ -1,0 +1,34 @@
+configfile: "config/config.yaml"
+
+
+INPUT_DIR = config['input_dir']
+
+STAGE_LIST = config['stage_list']
+
+
+def get_resource(rule, resource):
+    try:
+        return config["resources"][rule][resource]
+    except KeyError:
+        return config["resources"]["default"][resource]
+
+
+rule bamtobed: 
+    input:
+        stage_bam = f"{INPUT_DIR}/{{stage}}_LASeR/sim.srt.bam" 
+    output:
+        stage_bed = f"resources/{{stage}}.bed"
+    log:
+        f"results/log/bamtobed/{{stage}}.log"
+    benchmark:
+        f"results/log/bamtobed/{{stage}}.bmk"
+    threads: get_resource("bamtobed", "threads")
+    resources:
+        mem_mb = get_resource("bamtobed", "mem_mb"),
+        runtime = get_resource("bamtobed", "runtime"),
+        slurm_partition = get_resource("bamtobed", "partition")
+    conda:
+        "envs/bedtools.yaml"
+    shell:"""
+    bedtools bamtobed -i {input.stage_bam} > {output.stage_bed}
+    """
