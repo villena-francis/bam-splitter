@@ -1,0 +1,7 @@
+resources/**
+!resources/.gitkeep
+
+results/**
+!results/.gitkeep
+
+.snakemake
