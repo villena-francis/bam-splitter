@@ -4,4 +4,4 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  - bedtools=2.31.1-2
+  - bedtools=2.31.1
