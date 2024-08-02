@@ -25,3 +25,8 @@ resources:
         mem_mb: 24000
         runtime: 120
         partition: short
+    index:
+        threads: 8
+        mem_mb: 24000
+        runtime: 120
+        partition: short

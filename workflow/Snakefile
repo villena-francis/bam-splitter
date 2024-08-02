@@ -80,3 +80,23 @@ rule intersect:
         bedtools intersect -abam {input.stage_bam} -b {input.chr_bed} \
         -wa > {output.chr_bam}"
     """
+
+rule index:
+    input:
+        chr_bam = f"results/{{stage}}/{{chr}}_{{stage}}.bam"
+    output:
+        chr_bai = f"results/{{stage}}/{{chr}}_{{stage}}.bam.bai"
+    log:
+        f"results/log/index/{{chr}}_{{stage}}.log"
+    benchmark:
+        f"results/log/index/{{chr}}_{{stage}}.bmk"
+    threads: get_resource("index", "threads")
+    resources:
+        mem_mb = get_resource("index", "mem_mb"),
+        runtime = get_resource("index", "runtime"),
+        slurm_partition = get_resource("index", "partition")
+    conda:
+        "envs/samtools.yaml"
+    shell:"""
+        samtools index {input.chr_bam}
+    """
