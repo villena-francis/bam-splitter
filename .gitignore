@@ -1,6 +1,6 @@
 resources/**
-!resources/.gitkeep
-
+!resources/fig/
+!resources/fig/overview.png
 results/**
 !results/.gitkeep
 
